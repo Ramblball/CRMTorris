@@ -13,8 +13,8 @@ import java.util.Set;
 @Setter
 public class Company {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "company", unique = true, length = 127)

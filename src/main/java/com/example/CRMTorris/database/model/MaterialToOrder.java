@@ -12,6 +12,7 @@ import javax.persistence.*;
 public class MaterialToOrder {
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "count", nullable = false)
