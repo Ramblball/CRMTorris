@@ -24,8 +24,6 @@ public class Worker implements UserDetails {
 
     @Column(name = "name", unique = true, nullable = false)
     private String name;
-    @Column(name = "salt")
-    private Integer salt;
     @Column(name = "password")
     private String password;
 
