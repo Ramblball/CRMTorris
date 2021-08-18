@@ -20,6 +20,8 @@ public class Manager {
 
     @Column(name = "manager", length = 63)
     private String manager;
+    @Column(name = "mail", length = 63)
+    private String mail;
 
     @ManyToOne
     @JoinColumn(name = "company_id")
@@ -28,5 +30,4 @@ public class Manager {
     @OrderBy("order.id DESC")
     @OneToMany(mappedBy = "manager", orphanRemoval = true)
     private List<Order> orders;
-
 }
