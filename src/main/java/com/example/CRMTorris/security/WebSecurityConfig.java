@@ -7,8 +7,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -31,7 +33,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors().and()
-                .csrf().disable().authorizeRequests()
+                .csrf().disable()
+                .addFilterBefore(new CheckAuthCookieFilter(), BasicAuthenticationFilter.class)
+                .authorizeRequests()
                 .antMatchers(LOGIN_FORM_URL).permitAll()
                 .antMatchers("/**").authenticated()
                 .and()
@@ -43,6 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .invalidSessionUrl(LOGIN_FORM_URL)
                 .maximumSessions(3).maxSessionsPreventsLogin(false);
     }
