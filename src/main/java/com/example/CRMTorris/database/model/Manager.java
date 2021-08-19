@@ -14,8 +14,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Manager {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "manager", length = 63)
