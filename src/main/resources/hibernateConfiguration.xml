@@ -1,40 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-    <bean id="sessionFactory"
-          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
-        <property name="dataSource"
-                  ref="dataSource"/>
-        <property name="packagesToScan"
-                  value="com.example.CRMTorris.database.model"/>
-        <property name="hibernateProperties">
-            <props>
-                <prop key="hibernate.hbm2ddl.auto">
-                    create
-                </prop>
-                <prop key="hibernate.dialect">
-                    org.hibernate.dialect.PostgreSQL10Dialect
-                </prop>
-            </props>
-        </property>
-    </bean>
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/data/jpa
+        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="url"
-                  value="jdbc:postgresql://localhost:5432/postgres"/>
-        <property name="username"
-                  value="postgres"/>
-        <property name="password"
-                  value="Pilafo77"/>
+        <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>
+        <property name="username" value="postgres"/>
+        <property name="password" value="Pilafo77"/>
     </bean>
 
-    <bean id="txManager"
-          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
-        <property name="sessionFactory"
-                  ref="sessionFactory"/>
+    <tx:annotation-driven/>
+    <bean id="transactionManager"
+          class="org.springframework.orm.jpa.JpaTransactionManager">
+        <constructor-arg ref="entityManagerFactory"/>
     </bean>
 
+    <jpa:repositories base-package="com.example.CRMTorris.database.repository"
+                      entity-manager-factory-ref="entityManagerFactory"/>
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="packagesToScan" value="com.example.CRMTorris.database.model"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL10Dialect</prop>
+            </props>
+        </property>
+        <property name="persistenceProvider">
+            <bean class="org.hibernate.jpa.HibernatePersistenceProvider"/>
+        </property>
+    </bean>
 </beans>
