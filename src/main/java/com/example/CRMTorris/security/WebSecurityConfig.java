@@ -7,8 +7,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -18,31 +20,39 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    static final String LOGIN_FORM_URL = "/login";
-    static final String LOGOUT_FORM_URL = "/logout";
+    private static final String LOGIN_FORM_URL = "/login";
+    private static final String LOGOUT_FORM_URL = "/logout";
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         super.configure(auth);
     }
 
-    //TODO: Session generator
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors().and()
-                .csrf().disable().authorizeRequests()
-                .antMatchers(LOGIN_FORM_URL).permitAll()
-                .antMatchers("/**").authenticated()
+                .csrf().disable()
+                .addFilterBefore(new CheckAuthCookieFilter(), BasicAuthenticationFilter.class)
+                .authorizeRequests()
+                .antMatchers("/create/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage(LOGIN_FORM_URL)
+                .defaultSuccessUrl("/")
+                .permitAll()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher(LOGOUT_FORM_URL))
                 .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
+                .logoutSuccessUrl(LOGIN_FORM_URL)
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .addLogoutHandler(new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL)))
                 .permitAll()
                 .and()
                 .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .invalidSessionUrl(LOGIN_FORM_URL)
                 .maximumSessions(3).maxSessionsPreventsLogin(false);
     }
