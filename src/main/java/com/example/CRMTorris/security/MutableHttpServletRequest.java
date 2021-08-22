@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.*;
 
 public final class MutableHttpServletRequest extends HttpServletRequestWrapper {
-    // holds custom header and value mapping
+
     private final Map<String, String> customHeaders;
 
     public MutableHttpServletRequest(HttpServletRequest request) {

@@ -20,15 +20,14 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    static final String LOGIN_FORM_URL = "/login";
-    static final String LOGOUT_FORM_URL = "/logout";
+    private static final String LOGIN_FORM_URL = "/login";
+    private static final String LOGOUT_FORM_URL = "/logout";
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         super.configure(auth);
     }
 
-    //TODO: Session generator
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -36,11 +35,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .addFilterBefore(new CheckAuthCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(LOGIN_FORM_URL).permitAll()
-                .antMatchers("/**").authenticated()
+                .antMatchers("/create/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage(LOGIN_FORM_URL)
+                .defaultSuccessUrl("/")
+                .permitAll()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher(LOGOUT_FORM_URL))
                 .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
+                .logoutSuccessUrl(LOGIN_FORM_URL)
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .addLogoutHandler(new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL)))
