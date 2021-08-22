@@ -18,8 +18,9 @@ public class Role implements GrantedAuthority {
     @Column(name = "role", unique = true)
     private String role;
 
-    @ManyToMany(mappedBy = "roles")
-    private Set<Worker> users;
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "role")
+    private Set<Worker> workers;
 
     public Role() {
     }

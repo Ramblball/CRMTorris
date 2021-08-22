@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -27,8 +28,9 @@ public class Worker implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles;
+    @ManyToOne
+    @JoinColumn(name = "role")
+    private Role role;
 
     @OrderBy("order.id DESC")
     @OneToMany(mappedBy = "worker", orphanRemoval = true)
@@ -36,7 +38,7 @@ public class Worker implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+        return Collections.singleton(role);
     }
 
     @Override

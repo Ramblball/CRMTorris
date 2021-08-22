@@ -25,12 +25,10 @@ public class WorkerService implements UserDetailsService {
     private EntityManager entityManager;
     private final WorkerRepository workerRepository;
     private final RoleRepository roleRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public WorkerService(WorkerRepository workerRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public WorkerService(WorkerRepository workerRepository, RoleRepository roleRepository) {
         this.workerRepository = workerRepository;
         this.roleRepository = roleRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -54,8 +52,8 @@ public class WorkerService implements UserDetailsService {
             return false;
         }
 
-        worker.setRoles(Collections.singleton(new Role(1L, "USER")));
-        worker.setPassword(bCryptPasswordEncoder.encode(worker.getPassword()));
+        worker.setRole(roleRepository.findAll().get(0));
+        worker.setPassword(new BCryptPasswordEncoder().encode(worker.getPassword()));
         workerRepository.save(worker);
         return true;
     }
