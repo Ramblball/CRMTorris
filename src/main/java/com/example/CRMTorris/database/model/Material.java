@@ -10,7 +10,7 @@ import java.sql.Date;
 @Entity
 @Getter
 @Setter
-public class Material {
+public class Material implements EntityClass{
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -33,7 +33,7 @@ public class Material {
     @Column(name = "color", nullable = false, length = 31)
     private String color;
     @Column(name = "owner", nullable = false)
-    private Boolean owner = false;
+    private Boolean owner;
     @Column(name = "add_time", nullable = false)
     private Date add_time;
     @Column(name = "get_time")

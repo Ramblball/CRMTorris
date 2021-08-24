@@ -1,8 +1,6 @@
 package com.example.CRMTorris.database.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,14 +8,16 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
 @Setter
+@MappedSuperclass
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "worker")
 @RequiredArgsConstructor
-public class Worker implements UserDetails {
+public class Worker implements UserDetails, EntityClass {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

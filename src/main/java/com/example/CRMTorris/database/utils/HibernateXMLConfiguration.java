@@ -8,5 +8,4 @@ import org.springframework.context.annotation.ImportResource;
 @Configuration
 @ImportResource({"classpath:hibernateConfiguration.xml"})
 public class HibernateXMLConfiguration {
-
 }
