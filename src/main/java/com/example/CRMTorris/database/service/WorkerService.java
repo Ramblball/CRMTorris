@@ -1,6 +1,5 @@
 package com.example.CRMTorris.database.service;
 
-import com.example.CRMTorris.database.model.Role;
 import com.example.CRMTorris.database.model.Worker;
 import com.example.CRMTorris.database.repository.RoleRepository;
 import com.example.CRMTorris.database.repository.WorkerRepository;
