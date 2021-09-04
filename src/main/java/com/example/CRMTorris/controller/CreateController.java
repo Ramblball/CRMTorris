@@ -1,6 +1,6 @@
 package com.example.CRMTorris.controller;
 
-import com.example.CRMTorris.database.model.Order;
+import com.example.CRMTorris.database.dto.OrderDto;
 import com.example.CRMTorris.database.model.Worker;
 import com.example.CRMTorris.database.service.OrderService;
 import com.example.CRMTorris.database.service.WorkerService;
@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.Objects;
 
 @Controller("/create")
 public class CreateController {
@@ -30,10 +32,11 @@ public class CreateController {
     }
 
     @PostMapping("/order")
-    public ResponseEntity<Order> addOrder(@RequestBody Order order) {
-        if (orderService.saveOrder(order)) {
-            return new ResponseEntity<>("Registration error", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto) {
+        OrderDto result = orderService.saveOrder(orderDto);
+        if (Objects.isNull(result)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("redirect:/order", HttpStatus.CREATED);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 }

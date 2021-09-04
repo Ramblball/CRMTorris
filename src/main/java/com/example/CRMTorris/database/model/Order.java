@@ -28,6 +28,8 @@ public class Order implements EntityClass{
     private String order;
     @Column(name = "comment")
     private String comment;
+    @Column(name = "complete")
+    private boolean complete;
 
     @ManyToOne
     @JoinColumn(name = "worker_id")

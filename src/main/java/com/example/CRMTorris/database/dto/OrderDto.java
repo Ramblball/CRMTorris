@@ -17,6 +17,7 @@ public class OrderDto extends AbstractDto{
     private Date time;
     private String order;
     private String comment;
+    private boolean complete;
     private Long workerId;
     private Long managerId;
     private Long invoiceId;
