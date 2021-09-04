@@ -1,4 +1,4 @@
-package com.example.CRMTorris.security;
+package com.example.CRMTorris.config.filter;
 
 import com.example.CRMTorris.exception.security.CookieVerificationFailedException;
 import lombok.extern.log4j.Log4j;
