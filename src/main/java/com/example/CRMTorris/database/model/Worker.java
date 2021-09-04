@@ -9,14 +9,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-@Entity
+
 @Getter
 @Setter
 @MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 @Table(name = "worker")
-@RequiredArgsConstructor
 public class Worker implements UserDetails, EntityClass {
     @Id
     @Column(name = "id", nullable = false)

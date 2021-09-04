@@ -1,6 +1,9 @@
-package com.example.CRMTorris.security;
+package com.example.CRMTorris.config;
 
+import com.example.CRMTorris.config.filter.CheckAuthCookieFilter;
+import com.example.CRMTorris.database.service.WorkerService;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -8,6 +11,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -17,11 +23,18 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+@Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_FORM_URL = "/login";
     private static final String LOGOUT_FORM_URL = "/logout";
+
+    private final WorkerService workerService;
+
+    public WebSecurityConfig(WorkerService workerService) {
+        this.workerService = workerService;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -39,9 +52,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage(LOGIN_FORM_URL)
-                .defaultSuccessUrl("/")
-                .permitAll()
+                .loginPage(LOGIN_FORM_URL).defaultSuccessUrl("/").permitAll()
+                .loginProcessingUrl(LOGIN_FORM_URL).permitAll().usernameParameter("username").passwordParameter("password")
+                .and()
+                .rememberMe()
+                .alwaysRemember(true)
+                .rememberMeCookieName("auth")
+                .key("somesecret")
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher(LOGOUT_FORM_URL))
                 .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
@@ -73,5 +90,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         config.setAllowCredentials(true);
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return workerService;
+    }
+
+    public enum Role {
+        WORKER,
+        ADMIN
     }
 }

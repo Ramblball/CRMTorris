@@ -1,4 +1,4 @@
-package com.example.CRMTorris.security;
+package com.example.CRMTorris.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;

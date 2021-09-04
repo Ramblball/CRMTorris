@@ -1,11 +1,17 @@
 package com.example.CRMTorris.database.dto;
 
+import com.example.CRMTorris.database.dto.transfer.AdminDetails;
+import com.example.CRMTorris.database.dto.transfer.Details;
+import com.example.CRMTorris.database.dto.transfer.New;
 import com.example.CRMTorris.database.model.MaterialToOrder;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.sql.Date;
 import java.util.Set;
 
@@ -14,12 +20,30 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class OrderDto extends AbstractDto{
+
+    @JsonView({Details.class})
+    @Null
     private Date time;
+
+    @JsonView({Details.class})
+    @NotNull(groups = {New.class})
     private String order;
+
+    @JsonView({Details.class})
     private String comment;
-    private boolean complete;
+
+    @JsonView({Details.class})
+    @Null(groups = {New.class})
     private Long workerId;
+
+    @JsonView({Details.class})
+    @NotNull(groups = {New.class})
     private Long managerId;
+
+    @JsonView({AdminDetails.class})
+    @Null(groups = {New.class})
     private Long invoiceId;
+
+    @JsonView({Details.class})
     private Set<MaterialToOrder> materialsToOrder;
 }

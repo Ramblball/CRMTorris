@@ -5,7 +5,7 @@ import com.example.CRMTorris.database.filter.MaterialFilter;
 public class MaterialQueryBuilder {
 
     private final static String PRESET = "SELECT m FROM Material m WHERE ";
-    private final static String FULL = ""
+    private final static String FULL = "";
 
     private final MaterialFilter filter;
 
@@ -13,10 +13,10 @@ public class MaterialQueryBuilder {
         this.filter = filter;
     }
 
-    public MaterialQueryBuilder build() {
-        StringBuilder builder = new StringBuilder(PRESET);
-        if (filter.isFull()) {
-
-        }
-    }
+//    public MaterialQueryBuilder build() {
+//        StringBuilder builder = new StringBuilder(PRESET);
+//        if (filter.isFull()) {
+//
+//        }
+//    }
 }

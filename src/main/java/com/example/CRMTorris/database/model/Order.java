@@ -1,20 +1,16 @@
 package com.example.CRMTorris.database.model;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
-@Table(name = "order")
 @Entity
 @Getter
 @Setter
+@Table(name = "order")
 public class Order implements EntityClass{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -28,8 +24,8 @@ public class Order implements EntityClass{
     private String order;
     @Column(name = "comment")
     private String comment;
-    @Column(name = "complete")
-    private boolean complete;
+    @Column(name = "file", unique = true)
+    private String file;
 
     @ManyToOne
     @JoinColumn(name = "worker_id")
