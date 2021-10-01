@@ -11,25 +11,25 @@ import javax.persistence.*;
 @Setter
 public class Invoice implements EntityClass {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "number", unique = true)
+    @Column(name = "number", nullable = false)
     private Long number;
-    @Column(name = "producer", length = 31)
+    @Column(name = "producer", nullable = false)
     private String producer;
-    @Column(name = "cost")
+    @Column(name = "cost", nullable = false)
     private Double cost;
-    @Column(name = "paid")
-    private Boolean paid;
+    @Column(name = "paid", nullable = false)
+    private Boolean paid = false;
 
-    @OneToOne(optional = false, orphanRemoval = true)
+    @OneToOne(optional = false)
     @JoinColumn(name = "order_id", nullable = false, unique = true)
     private Order order;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "company_id", nullable = false, unique = true)
+    @JoinColumn(name = "company_id")
     private Company company;
 
 }

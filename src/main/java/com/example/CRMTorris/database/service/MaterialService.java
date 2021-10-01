@@ -1,7 +1,7 @@
 package com.example.CRMTorris.database.service;
 
-import com.example.CRMTorris.database.dto.MaterialDto;
-import com.example.CRMTorris.database.dto.mapper.MaterialMapper;
+import com.example.CRMTorris.dto.MaterialDto;
+import com.example.CRMTorris.dto.mapper.MaterialMapper;
 import com.example.CRMTorris.database.repository.MaterialRepository;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;

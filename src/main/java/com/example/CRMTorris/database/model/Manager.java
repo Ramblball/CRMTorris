@@ -15,19 +15,19 @@ import java.util.List;
 public class Manager implements EntityClass {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "manager", length = 63)
+    @Column(name = "manager", nullable = false)
     private String manager;
-    @Column(name = "mail", length = 63)
+    @Column(name = "mail", nullable = false)
     private String mail;
 
     @ManyToOne
-    @JoinColumn(name = "company_id")
+    @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
     @OrderBy("order.id DESC")
-    @OneToMany(mappedBy = "manager", orphanRemoval = true)
+    @OneToMany(mappedBy = "manager")
     private List<Order> orders;
 }

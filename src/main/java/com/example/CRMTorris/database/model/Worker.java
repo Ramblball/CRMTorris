@@ -9,18 +9,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-
+@Entity
 @Getter
 @Setter
-@MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Table(name = "worker")
 public class Worker implements UserDetails, EntityClass {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", unique = true, nullable = false)
@@ -33,7 +31,7 @@ public class Worker implements UserDetails, EntityClass {
     private Role role;
 
     @OrderBy("order.id DESC")
-    @OneToMany(mappedBy = "worker", orphanRemoval = true)
+    @OneToMany(mappedBy = "worker")
     private List<Order> orders;
 
     @Override

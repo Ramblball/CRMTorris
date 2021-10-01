@@ -5,7 +5,6 @@ import com.example.CRMTorris.database.service.WorkerService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,10 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -28,6 +25,7 @@ import org.springframework.web.filter.CorsFilter;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_FORM_URL = "/login";
+    private static final String LOGIN_PROC_URL = "/auth";
     private static final String LOGOUT_FORM_URL = "/logout";
 
     private final WorkerService workerService;
@@ -38,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        super.configure(auth);
+        auth.userDetailsService(userDetailsService());
     }
 
     @Override
@@ -49,27 +47,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new CheckAuthCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/create/**").hasRole("ADMIN")
+                .antMatchers("/static/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .httpBasic()
+                .and()
                 .formLogin()
-                .loginPage(LOGIN_FORM_URL).defaultSuccessUrl("/").permitAll()
-                .loginProcessingUrl(LOGIN_FORM_URL).permitAll().usernameParameter("username").passwordParameter("password")
+                .loginPage(LOGIN_FORM_URL)
+                .loginProcessingUrl(LOGIN_PROC_URL)
+                .defaultSuccessUrl("/", true)
+                .failureUrl(LOGIN_FORM_URL)
                 .and()
-                .rememberMe()
-                .alwaysRemember(true)
-                .rememberMeCookieName("auth")
-                .key("somesecret")
-                .and()
-                .logout().logoutRequestMatcher(new AntPathRequestMatcher(LOGOUT_FORM_URL))
-                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
+                .logout()
+                .logoutUrl(LOGOUT_FORM_URL)
                 .logoutSuccessUrl(LOGIN_FORM_URL)
+                .deleteCookies("auth")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .addLogoutHandler(new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL)))
                 .permitAll()
                 .and()
+                .rememberMe()
+                .alwaysRemember(true)
+                .key("somesecret")
+                .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .enableSessionUrlRewriting(false)
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .invalidSessionUrl(LOGIN_FORM_URL)
                 .maximumSessions(3).maxSessionsPreventsLogin(false);
     }
@@ -103,6 +107,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public enum Role {
         WORKER,
-        ADMIN
+        ADMIN,
+        ROLE_ANONYMOUS
     }
 }

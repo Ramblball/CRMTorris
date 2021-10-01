@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.CRMTorris.config.WebSecurityConfig;
-import com.example.CRMTorris.database.dto.view.View;
+import com.example.CRMTorris.dto.view.View;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJacksonValue;

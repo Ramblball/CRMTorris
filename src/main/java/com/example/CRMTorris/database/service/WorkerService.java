@@ -1,5 +1,7 @@
 package com.example.CRMTorris.database.service;
 
+import com.example.CRMTorris.dto.WorkerDto;
+import com.example.CRMTorris.dto.mapper.WorkerMapper;
 import com.example.CRMTorris.database.model.Worker;
 import com.example.CRMTorris.database.repository.RoleRepository;
 import com.example.CRMTorris.database.repository.WorkerRepository;
@@ -21,10 +23,12 @@ public class WorkerService implements UserDetailsService {
 
     @PersistenceContext
     private EntityManager entityManager;
+    private final WorkerMapper workerMapper;
     private final WorkerRepository workerRepository;
     private final RoleRepository roleRepository;
 
-    public WorkerService(WorkerRepository workerRepository, RoleRepository roleRepository) {
+    public WorkerService(WorkerMapper workerMapper, WorkerRepository workerRepository, RoleRepository roleRepository) {
+        this.workerMapper = workerMapper;
         this.workerRepository = workerRepository;
         this.roleRepository = roleRepository;
     }
@@ -45,14 +49,14 @@ public class WorkerService implements UserDetailsService {
         return workerRepository.findAll();
     }
 
-    public boolean saveWorker(Worker worker) {
+    public boolean saveWorker(WorkerDto worker) {
         if (workerRepository.findByName(worker.getName()).isPresent()) {
             return false;
         }
 
-        worker.setRole(roleRepository.findAll().get(0));
+        worker.setRole(roleRepository.findAll().get(1));
         worker.setPassword(new BCryptPasswordEncoder().encode(worker.getPassword()));
-        workerRepository.save(worker);
+        workerRepository.save(workerMapper.toEntity(worker));
         return true;
     }
 

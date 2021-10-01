@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class MaterialToOrder implements EntityClass {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "count", nullable = false)
@@ -22,7 +22,7 @@ public class MaterialToOrder implements EntityClass {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @OneToOne(optional = false, orphanRemoval = true)
+    @OneToOne(optional = false)
     @JoinColumn(name = "material_id", nullable = false)
     private Material material;
 

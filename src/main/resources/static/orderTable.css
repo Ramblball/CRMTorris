@@ -1,0 +1,27 @@
+table {
+    border-collapse: collapse
+}
+tr.process td {
+    position: relative;
+    background-color: rgba(247, 252, 0, 0.61);
+}
+tr.complete td {
+    position: relative;
+    background-color: rgba(0, 255, 0, 0.562);
+}
+tr.freeze td {
+    position: relative;
+    background-color: rgba(192, 192, 192, 0.226);
+}
+tr.close td {
+    position: relative;
+    background-color: rgba(247, 70, 47, 0.466);
+}
+tr.close td:before {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    border-bottom: 1px solid #000;
+}

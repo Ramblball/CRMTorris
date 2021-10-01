@@ -15,11 +15,10 @@ public class Role implements GrantedAuthority, EntityClass {
     @Id
     private Long id;
 
-    @Column(name = "role", unique = true)
+    @Column(name = "role", unique = true, nullable = false)
     private String role;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "role")
+    @OneToMany(mappedBy = "role")
     private Set<Worker> workers;
 
     public Role() {
