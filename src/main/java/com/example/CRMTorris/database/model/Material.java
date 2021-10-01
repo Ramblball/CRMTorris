@@ -10,18 +10,18 @@ import java.sql.Date;
 @Entity
 @Getter
 @Setter
-public class Material {
+public class Material implements EntityClass{
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "place", nullable = false)
     private Integer place;
-    @Column(name = "material", nullable = false, length = 63)
+    @Column(name = "material", nullable = false)
     private String material;
-    @Column(name = "producer", nullable = false, length = 31)
-    private String producer;
+    @Column(name = "full", nullable = false)
+    private Boolean full;
     @Column(name = "height", nullable = false)
     private Integer height;
     @Column(name = "weight", nullable = false)
@@ -30,12 +30,14 @@ public class Material {
     private Integer thickness;
     @Column(name = "count", nullable = false)
     private Integer count;
-    @Column(name = "color", nullable = false, length = 31)
+    @Column(name = "color", nullable = false)
     private String color;
-    @Column(name = "owner", nullable = false)
-    private Boolean owner = false;
     @Column(name = "add_time", nullable = false)
     private Date add_time;
+    @Column(name = "used")
+    private Boolean used;
+    @Column(name = "part_of")
+    private Long partOf;
     @Column(name = "get_time")
     private Date get_time;
 

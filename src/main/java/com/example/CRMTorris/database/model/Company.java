@@ -11,21 +11,19 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-public class Company {
+public class Company implements EntityClass{
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "company", unique = true, length = 127)
+    @Column(name = "company", unique = true)
     private String company;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "company_id")
+    @OneToMany(mappedBy = "company")
     private Set<Manager> managers;
 
     @OrderBy("order.id DESC")
-    @OneToMany(mappedBy = "company", orphanRemoval = true)
+    @OneToMany(mappedBy = "company")
     private List<Invoice> invoices;
-
 }
